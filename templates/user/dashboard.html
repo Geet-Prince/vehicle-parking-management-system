@@ -1,0 +1,47 @@
+{% extends "user/base_user.html" %}
+
+{% block title %}User Dashboard{% endblock %}
+
+{% block content %}
+<h2>Welcome, {{ session.username }}!</h2>
+<p>Here are your active parking bookings:</p>
+
+{% if active_bookings %}
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Receipt ID</th>
+            <th>Lot Name</th>
+            <th>Location</th>
+            <th>Floor</th>
+            <th>Spot</th>
+            <th>Vehicle Reg#</th>
+            <th>Type</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for booking in active_bookings %}
+        <tr>
+            <td>{{ booking.receipt_id }}</td>
+            <td>{{ booking.lot_name }}</td>
+            <td>{{ booking.location }}</td>
+            <td>{{ booking.floor_number }}</td>
+            <td>{{ booking.spot_number }}</td>
+            <td>{{ booking.vehicle_reg_number }}</td>
+            <td>{{ booking.vehicle_type }}</td>
+            <td>{{ booking.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>{{ booking.end_time.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td><a href="{{ url_for('user_booking_receipt', receipt_id=booking.receipt_id) }}" class="btn btn-sm">View Receipt</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>You have no active bookings.</p>
+{% endif %}
+
+<a href="{{ url_for('user_search_lots') }}" class="btn">Book a New Spot</a>
+{% endblock %}

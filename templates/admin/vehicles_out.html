@@ -1,0 +1,39 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Exited Vehicles{% endblock %}
+{% block content %}
+<h2>Vehicles Exited</h2>
+{% if vehicles %}
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Owner</th>
+            <th>Vehicle Reg#</th>
+            <th>Type</th>
+            <th>Entry Time</th>
+            <th>Exit Time</th> <!-- Changed -->
+            <th>Floor</th>
+            <th>Spot</th>
+            <th>Amount</th> <!-- Added -->
+            <th>Receipt ID</th> <!-- Added -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for vehicle in vehicles %}
+        <tr>
+            <td>{{ vehicle.owner_name }}</td>
+            <td>{{ vehicle.vehicle_reg_number }}</td>
+            <td>{{ vehicle.vehicle_type }}</td>
+            <td>{{ vehicle.entry_time.strftime('%Y-%m-%d %H:%M') if vehicle.entry_time else 'N/A' }}</td>
+            <td>{{ vehicle.exit_time.strftime('%Y-%m-%d %H:%M') if vehicle.exit_time else 'N/A' }}</td>
+            <td>{{ vehicle.floor_number }}</td>
+            <td>{{ vehicle.spot_number }}</td>
+            <td> ₹{{ vehicle.amount | round(2) if vehicle.amount is not none else '0.00' }}</td>
+            <td>{{ vehicle.receipt_id }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No vehicles have been marked as exited yet.</p>
+{% endif %}
+{% endblock %}

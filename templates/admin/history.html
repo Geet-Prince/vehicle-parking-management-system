@@ -1,0 +1,47 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Full Parking History{% endblock %}
+
+{% block content %}
+<h2>Full Parking History</h2>
+<p>This shows all booking records (active, completed, past) for your lot.</p>
+
+{% if bookings %}
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Receipt ID</th>
+            <th>Status</th>
+            <th>Owner</th>
+            <th>Vehicle Reg#</th>
+            <th>Type</th>
+            <th>Floor/Spot</th>
+            <th>Scheduled Start</th>
+            <th>Scheduled End</th>
+            <th>Actual Entry</th>
+            <th>Actual Exit</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for booking in bookings %}
+        <tr class="{{ 'active-booking' if booking.is_active else 'inactive-booking' }}"> {# Optional: Style active rows differently #}
+            <td>{{ booking.receipt_id }}</td>
+            <td>{% if booking.is_active %}Active{% else %}Inactive/Exited{% endif %}</td>
+            <td>{{ booking.owner_name }}</td>
+            <td>{{ booking.vehicle_reg_number }}</td>
+            <td>{{ booking.vehicle_type }}</td>
+            <td>{{ booking.floor_number }}/{{ booking.spot_number }}</td>
+            <td>{{ booking.start_time.strftime('%Y-%m-%d %H:%M') if booking.start_time else 'N/A' }}</td>
+            <td>{{ booking.end_time.strftime('%Y-%m-%d %H:%M') if booking.end_time else 'N/A' }}</td>
+            <td>{{ booking.entry_time.strftime('%Y-%m-%d %H:%M') if booking.entry_time else 'N/A' }}</td>
+            <td>{{ booking.exit_time.strftime('%Y-%m-%d %H:%M') if booking.exit_time else 'N/A' }}</td>
+            <td> ₹{{ booking.amount | round(2) if booking.amount is not none else '0.00' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No booking history found for this lot yet.</p>
+{% endif %}
+{% endblock %}

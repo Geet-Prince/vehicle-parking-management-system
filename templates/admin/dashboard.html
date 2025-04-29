@@ -1,0 +1,40 @@
+{# File: templates/admin/dashboard.html #}
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+     <h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard - {{ lot_name }}</h2> {# Added Icon #}
+     <p>Welcome, {{ session.admin_username }}! Overview of your parking facility.</p> {# Added description #}
+</div>
+
+<div class="dashboard-metrics">
+    <div class="metric-card">
+        <h3><i class="fas fa-car"></i> Total Parked</h3> {# Added Icon #}
+        <p>{{ stats.total_parked }}</p>
+    </div>
+    <div class="metric-card">
+        <h3><i class="fas fa-motorcycle"></i> 2-Wheelers (F0)</h3> {# Added Icon #}
+        <p>{{ stats.parked_2w }} / {{ stats.capacity_2w }}</p>
+    </div>
+    <div class="metric-card">
+         <h3><i class="fas fa-car-side"></i> 4-Wheelers (F1)</h3> {# Added Icon #}
+        <p>{{ stats.parked_4w_f1 }} / {{ stats.capacity_4w_f1 }}</p>
+    </div>
+     <div class="metric-card">
+         <h3><i class="fas fa-car-alt"></i> 4-Wheelers (F2)</h3> {# Added Icon #}
+        <p>{{ stats.parked_4w_f2 }} / {{ stats.capacity_4w_f2 }}</p>
+    </div>
+     <div class="metric-card earnings-card"> {# Specific class for styling #}
+        <h3><i class="fas fa-rupee-sign"></i> Total Earnings</h3> {# Updated Icon #}
+        <p class="earnings">₹{{ stats.total_earnings | round(2) }}</p> {# Updated Symbol #}
+    </div>
+</div>
+
+<div class="dashboard-actions">
+    <a href="{{ url_for('admin_vehicles_in') }}" class="btn btn-info"><i class="fas fa-sign-in-alt"></i> View Vehicles In Lot</a> {# Updated Classes/Icons #}
+    <a href="{{ url_for('admin_vehicles_out') }}" class="btn btn-secondary"><i class="fas fa-sign-out-alt"></i> View Exited Vehicles</a>
+    <a href="{{ url_for('admin_history') }}" class="btn btn-secondary"><i class="fas fa-history"></i> View Full History</a>
+</div>
+{% endblock %}

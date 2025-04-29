@@ -1,0 +1,45 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Earnings Report{% endblock %}
+
+{% block content %}
+<h2>Earnings Report</h2>
+<p>This report shows completed bookings that resulted in earnings for your lot.</p>
+
+<div class="metric-card" style="max-width: 300px; margin-bottom: 2rem;">
+    <h3>Total Calculated Earnings</h3>
+    <p> ₹{{ total_earnings | round(2) }}</p>
+</div>
+
+
+{% if bookings %}
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Receipt ID</th>
+            <th>Owner</th>
+            <th>Vehicle Reg#</th>
+            <th>Type</th>
+            <th>Entry Time</th>
+            <th>Exit Time</th>
+            <th>Amount Earned</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for booking in bookings %}
+        <tr>
+            <td>{{ booking.receipt_id }}</td>
+            <td>{{ booking.owner_name }}</td>
+            <td>{{ booking.vehicle_reg_number }}</td>
+            <td>{{ booking.vehicle_type }}</td>
+            <td>{{ booking.entry_time.strftime('%Y-%m-%d %H:%M') if booking.entry_time else 'N/A' }}</td>
+            <td>{{ booking.exit_time.strftime('%Y-%m-%d %H:%M') if booking.exit_time else 'N/A' }}</td>
+            <td> ₹{{ booking.amount | round(2) if booking.amount is not none else '0.00' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No completed bookings with earnings found for this lot yet.</p>
+{% endif %}
+{% endblock %}

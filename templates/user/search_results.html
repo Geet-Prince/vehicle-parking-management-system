@@ -1,0 +1,66 @@
+{# File: templates/user/search_results.html #}
+
+{% extends "user/base_user.html" %}
+
+{% block title %}Search Parking Lots{% endblock %}
+
+{% block content %}
+<h2><i class="fas fa-search"></i> Search Parking Lots</h2> {# Added Icon #}
+
+<form method="get" action="{{ url_for('user_search_lots') }}" class="search-form">
+    <input type="text" name="location" placeholder="Enter location (e.g., city, street, name)" value="{{ search_query }}" > {# Removed required - allow blank search to show all #}
+    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+     {% if search_query %}
+     <a href="{{ url_for('user_search_lots') }}" class="btn btn-secondary btn-sm"><i class="fas fa-times"></i> Clear</a> {# Icon for clear #}
+     {% endif %}
+</form>
+
+{% if search_query and lots %}
+    <h3>Search Results for "{{ search_query }}"</h3>
+{% elif not search_query and lots %}
+    <h3>Available Parking Lots</h3>
+{% endif %}
+
+{% if lots %}
+    <div class="lot-list">
+        {% for lot in lots %}
+            <div class="lot-card">
+                <div class="lot-card-content"> {# Wrap content #}
+                    <div class="lot-card-header">
+                        <strong><i class="fas fa-parking"></i> {{ lot.name }}</strong> {# Icon for lot #}
+                        <span><i class="fas fa-map-marker-alt"></i> {{ lot.location }}</span> {# Icon for location #}
+                    </div>
+                    {% if lot.availability_now is defined %}
+                        {# Add conditional class for color and icon #}
+                        {% set availability_class = 'available' %}
+                        {% set availability_icon = 'fa-check-circle' %}
+                        {% if lot.availability_now == 0 %}
+                            {% set availability_class = 'full' %}
+                            {% set availability_icon = 'fa-times-circle' %}
+                        {% elif lot.availability_now < 10 %} {# Example threshold for 'low' #}
+                            {% set availability_class = 'low' %}
+                            {% set availability_icon = 'fa-exclamation-circle' %}
+                        {% endif %}
+
+                        <div class="lot-card-availability {{ availability_class }}">
+                            <i class="fas {{ availability_icon }}"></i> {{ lot.availability_now }} spots currently available (Approx.)
+                        </div>
+                    {% else %}
+                         <div class="lot-card-availability low">
+                            <i class="fas fa-question-circle"></i> Availability check unavailable.
+                        </div>
+                    {% endif %}
+                    <div class="lot-card-actions">
+                        <a href="{{ url_for('user_show_booking_form', lot_id=lot.id) }}" class="btn btn-primary"><i class="fas fa-calendar-alt"></i> View Details & Book</a> {# Icon for booking #}
+                    </div>
+                </div> {# End lot-card-content #}
+            </div>
+        {% endfor %}
+    </div>
+{% elif search_query %} {# Show 'no results' only if a specific search was done and failed #}
+    <div class="alert alert-warning"><i class="fas fa-search-minus"></i> No lots found matching "{{ search_query }}". Try a different search term.</div>
+{% elif not search_query %} {# Prompt only if no search and no lots (can be adjusted) #}
+     <div class="alert alert-info"><i class="fas fa-info-circle"></i> Enter a location above to search or browse all available lots.</div>
+{% endif %}
+
+{% endblock %}

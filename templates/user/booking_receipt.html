@@ -1,0 +1,31 @@
+{% extends "user/base_user.html" %}
+
+{% block title %}Booking Confirmed - {{ booking.receipt_id }}{% endblock %}
+
+{% block content %}
+<h2>Booking Confirmation</h2>
+<p>Your parking spot has been successfully booked!</p>
+
+<div class="receipt-details">
+    <h3>Receipt Details ({{ booking.receipt_id }})</h3>
+    <p><strong>Parking Lot:</strong> {{ booking.lot_name }}</p>
+    <p><strong>Location:</strong> {{ booking.location }}</p>
+    <p><strong>Floor Number:</strong> {{ booking.floor_number }}</p>
+    <p><strong>Spot Number:</strong> {{ booking.spot_number }}</p>
+    <p><strong>Vehicle Type:</strong> {{ booking.vehicle_type }}</p>
+    <p><strong>Vehicle Registration:</strong> {{ booking.vehicle_reg_number }}</p>
+    <p><strong>Scheduled Start:</strong> {{ booking.start_time.strftime('%Y-%m-%d %H:%M') }}</p>
+    <p><strong>Scheduled End:</strong> {{ booking.end_time.strftime('%Y-%m-%d %H:%M') }}</p>
+    <p><strong>Amount Paid:</strong>  ₹{{ booking.amount | round(2) }}</p>
+    <p><strong>Booked On:</strong> {{ booking.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+</div>
+
+{% if pdf_filename %}
+    <a href="{{ url_for('download_receipt', filename=pdf_filename) }}" class="btn" download>Download PDF Receipt</a>
+{% else %}
+    <p class="alert alert-warning">Could not generate PDF receipt for download.</p>
+{% endif %}
+
+ <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+
+{% endblock %}

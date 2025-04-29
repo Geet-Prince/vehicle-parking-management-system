@@ -1,0 +1,46 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Admin Registration{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Admin & Parking Lot Registration</h2>
+    <p>Register a new administrator account and provide details for their parking facility.</p>
+    <form method="post">
+        <fieldset>
+            <legend>Admin Account Details</legend>
+            <div class="form-group">
+                <label for="username">Admin Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Admin Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required minlength="8">
+                 <small>Minimum 8 characters.</small>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Parking Lot Details</legend>
+             <div class="form-group">
+                <label for="lot_name">Parking Lot Name</label>
+                <input type="text" id="lot_name" name="lot_name" required>
+            </div>
+             <div class="form-group">
+                <label for="lot_location">Parking Lot Location</label>
+                <input type="text" id="lot_location" name="lot_location" required placeholder="e.g., 123 Main St, Cityville">
+                 <small>Include address and city.</small>
+            </div>
+            <p><small>Note: The system assumes a standard structure: Ground floor (100 2W), Floor 1 (100 4W), Floor 2 (100 4W).</small></p>
+        </fieldset>
+
+        <button type="submit" class="btn">Register Admin & Lot</button>
+    </form>
+    <p>Already have an admin account? <a href="{{ url_for('admin_login') }}">Login here</a></p>
+    <p><a href="{{ url_for('index') }}">Back to Home</a></p>
+</div>
+{% endblock %}

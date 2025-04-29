@@ -1,0 +1,56 @@
+{# File: templates/user/history.html #}
+
+{% extends "user/base_user.html" %}
+
+{% block title %}Parking History{% endblock %}
+
+{% block content %}
+<h2>Your Parking History</h2>
+<p>Here are your past parking sessions.</p>
+
+{% if history %}
+<div style="overflow-x:auto;"> {# Make table horizontally scrollable on small screens #}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Receipt ID</th>
+                <th>Lot Name</th>
+                <th>Location</th>
+                <th>Vehicle Reg#</th>
+                <th>Type</th>
+                <th>Floor/Spot</th>
+                <th>Scheduled Start</th>
+                <th>Scheduled End</th>
+                <th>Exited Time</th> {# Changed from Entry Time #}
+                <th>Amount Paid</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in history %}
+            <tr>
+                <td>{{ booking.receipt_id }}</td>
+                <td>{{ booking.lot_name }}</td>
+                <td>{{ booking.location }}</td>
+                <td>{{ booking.vehicle_reg_number }}</td>
+                <td>{{ booking.vehicle_type }}</td>
+                <td>{{ booking.floor_number }}/{{ booking.spot_number }}</td>
+                {# Format datetimes, check if they exist first #}
+                <td>{{ booking.start_time.strftime('%Y-%m-%d %H:%M') if booking.start_time else 'N/A' }}</td>
+                <td>{{ booking.end_time.strftime('%Y-%m-%d %H:%M') if booking.end_time else 'N/A' }}</td>
+                <td>{{ booking.exit_time.strftime('%Y-%m-%d %H:%M') if booking.exit_time else 'N/A (Completed)' }}</td> {# Show actual exit time #}
+                <td>₹{{ booking.amount | round(2) if booking.amount is not none else '0.00' }}</td>
+                <td>
+                     {# Link to view the original receipt #}
+                    <a href="{{ url_for('user_booking_receipt', receipt_id=booking.receipt_id) }}" class="btn btn-sm btn-secondary">View Receipt</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p>You have no past parking records.</p>
+{% endif %}
+
+{% endblock %}
